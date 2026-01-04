@@ -1,4 +1,5 @@
 import asyncio
+import os
 from datetime import time
 from telegram.ext import (
     ApplicationBuilder,
@@ -9,9 +10,9 @@ from telegram.ext import (
 )
 from telegram import Update
 
-TOKEN = "8489609878:AAG9PV67-CGuiOiA6p-j95sCxbhIhsAx358"
-GROUP_CHAT_ID = -5227660132  # Replace with your group ID
-REASK_INTERVAL = 600  # 10 minutes in seconds
+TOKEN = os.getenv("TOKEN")
+GROUP_CHAT_ID = int(os.getenv("GROUP_CHAT_ID"))
+REASK_INTERVAL = 600  # 10 minutes
 
 waiting_for_yes = False
 
@@ -50,13 +51,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def main():
     app = ApplicationBuilder().token(TOKEN).build()
 
-    # Commands
     app.add_handler(CommandHandler("start", start))
-
-    # Listen for replies
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    # Schedule daily reminders
+    # Schedule reminders
     app.job_queue.run_daily(ask_task, time(hour=9, minute=0))
     app.job_queue.run_daily(ask_task, time(hour=19, minute=0))
 
