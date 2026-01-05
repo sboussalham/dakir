@@ -22,7 +22,7 @@ async def ask_task(context: ContextTypes.DEFAULT_TYPE):
     waiting_for_yes = True
     await context.bot.send_message(
         chat_id=GROUP_CHAT_ID,
-        text="Derti l Yasser Flexotide oGhseltilih snano ?"
+        text="Did you do the task?"
     )
 
 
@@ -35,7 +35,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if waiting_for_yes:
         text = update.message.text.lower().strip()
 
-        if text == "Ah":
+        if text == "yes":
             waiting_for_yes = False
             await update.message.reply_text("Great! See you next time.")
         else:
